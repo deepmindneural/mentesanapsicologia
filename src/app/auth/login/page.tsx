@@ -91,36 +91,36 @@ export default function LoginPage() {
           />
           
           {/* Overlay content */}
-          <div className="absolute inset-0 z-20 flex flex-col justify-end p-12">
+          <div className="absolute inset-0 z-20 flex flex-col justify-end p-8">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="text-white"
             >
-              <h2 className="text-4xl font-bold mb-4">
-                Bienvenido de vuelta a{" "}
+              <h2 className="text-3xl font-bold mb-3">
+                Bienvenido a{" "}
                 <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                   Mente Sana
                 </span>
               </h2>
-              <p className="text-xl text-blue-100 leading-relaxed">
-                Continúa tu camino hacia el bienestar mental con la ayuda de nuestros psicólogos especializados y tecnología de IA avanzada.
+              <p className="text-lg text-blue-100 leading-relaxed">
+                Continúa tu camino hacia el bienestar mental.
               </p>
               
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 mt-8">
+              <div className="grid grid-cols-3 gap-4 mt-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-white">60+</div>
-                  <div className="text-blue-200 text-sm">Psicólogos</div>
+                  <div className="text-2xl font-bold text-white">60+</div>
+                  <div className="text-blue-200 text-xs">Psicólogos</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-white">10k+</div>
-                  <div className="text-blue-200 text-sm">Pacientes</div>
+                  <div className="text-2xl font-bold text-white">10k+</div>
+                  <div className="text-blue-200 text-xs">Pacientes</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-white">98%</div>
-                  <div className="text-blue-200 text-sm">Satisfacción</div>
+                  <div className="text-2xl font-bold text-white">98%</div>
+                  <div className="text-blue-200 text-xs">Satisfacción</div>
                 </div>
               </div>
             </motion.div>
@@ -128,7 +128,7 @@ export default function LoginPage() {
         </div>
 
         {/* Right side - Login Form */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -136,9 +136,9 @@ export default function LoginPage() {
             className="w-full max-w-md"
           >
             {/* Logo */}
-            <div className="flex items-center justify-center mb-8">
-              <MenteSanaLogo size={50} />
-              <h1 className="ml-3 text-3xl font-bold" style={{
+            <div className="flex items-center justify-center mb-6">
+              <MenteSanaLogo size={40} />
+              <h1 className="ml-3 text-2xl font-bold" style={{
                 background: 'linear-gradient(to right, #9333ea, #ec4899)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -149,17 +149,17 @@ export default function LoginPage() {
             </div>
 
             <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
-              <CardHeader className="text-center pb-6">
-                <CardTitle className="text-2xl font-bold text-slate-800">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-xl font-bold text-slate-800">
                   Iniciar Sesión
                 </CardTitle>
                 <CardDescription className="text-slate-600">
-                  Accede a tu cuenta para continuar con tu terapia
+                  Accede a tu cuenta
                 </CardDescription>
               </CardHeader>
 
               <CardContent>
-                <form onSubmit={handleLogin} className="space-y-6">
+                <form onSubmit={handleLogin} className="space-y-4">
                   {/* Error Message */}
                   {error && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-center gap-2">
@@ -169,36 +169,36 @@ export default function LoginPage() {
                   )}
 
                   {/* Email Input */}
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <label className="text-sm font-medium text-slate-700">
                       Correo Electrónico
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
                       <Input
                         type="email"
                         placeholder="tu@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 h-12 border-slate-200 focus:border-purple-400 focus:ring-purple-400/20"
+                        className="pl-9 h-10 border-slate-200 focus:border-purple-400 focus:ring-purple-400/20"
                         required
                       />
                     </div>
                   </div>
 
                   {/* Password Input */}
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <label className="text-sm font-medium text-slate-700">
                       Contraseña
                     </label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
                       <Input
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 pr-10 h-12 border-slate-200 focus:border-purple-400 focus:ring-purple-400/20"
+                        className="pl-9 pr-9 h-10 border-slate-200 focus:border-purple-400 focus:ring-purple-400/20"
                         required
                       />
                       <button
@@ -206,7 +206,7 @@ export default function LoginPage() {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
                       >
-                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
                     </div>
                   </div>
@@ -226,7 +226,7 @@ export default function LoginPage() {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-12 text-white font-medium"
+                    className="w-full h-10 text-white font-medium"
                     style={{
                       background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 50%, #a855f7 100%)',
                     }}
@@ -234,12 +234,12 @@ export default function LoginPage() {
                     {isLoading ? (
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        Iniciando sesión...
+                        Iniciando...
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
                         Iniciar Sesión
-                        <ArrowRight className="h-5 w-5" />
+                        <ArrowRight className="h-4 w-4" />
                       </div>
                     )}
                   </Button>
@@ -255,36 +255,36 @@ export default function LoginPage() {
                   </div>
 
                   {/* Social Login */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-3">
                     <Button
                       type="button"
                       variant="outline"
-                      className="h-12 border-slate-200 hover:bg-slate-50"
+                      className="h-9 border-slate-200 hover:bg-slate-50 text-sm"
                     >
-                      <Chrome className="h-5 w-5 mr-2" />
+                      <Chrome className="h-4 w-4 mr-1" />
                       Google
                     </Button>
                     <Button
                       type="button"
                       variant="outline"
-                      className="h-12 border-slate-200 hover:bg-slate-50"
+                      className="h-9 border-slate-200 hover:bg-slate-50 text-sm"
                     >
-                      <Smartphone className="h-5 w-5 mr-2" />
+                      <Smartphone className="h-4 w-4 mr-1" />
                       Apple
                     </Button>
                   </div>
                 </form>
 
                 {/* Test Credentials */}
-                <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
-                  <h4 className="font-semibold text-slate-800 mb-3 text-center">🧪 Credenciales de Prueba</h4>
+                <div className="mt-4 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-100">
+                  <h4 className="font-semibold text-slate-800 mb-2 text-center text-sm">🧪 Credenciales de Prueba</h4>
                   
                   {/* Admin Credentials - Highlighted */}
-                  <div className="mb-4 p-3 bg-gradient-to-r from-orange-100 to-red-100 rounded-lg border border-orange-200">
-                    <div className="flex items-center justify-center mb-2">
-                      <span className="font-bold text-orange-800">🔐 ADMINISTRADOR</span>
+                  <div className="mb-3 p-2 bg-gradient-to-r from-orange-100 to-red-100 rounded-lg border border-orange-200">
+                    <div className="flex items-center justify-center mb-1">
+                      <span className="font-bold text-orange-800 text-sm">🔐 ADMIN</span>
                     </div>
-                    <div className="text-center space-y-1 text-sm">
+                    <div className="text-center space-y-1 text-xs">
                       <div className="font-mono bg-white px-2 py-1 rounded border">
                         admin@admin.com
                       </div>
@@ -292,41 +292,32 @@ export default function LoginPage() {
                         admin
                       </div>
                     </div>
-                    <div className="text-center mt-2">
-                      <span className="text-xs text-orange-700 font-medium">
-                        ⚡ Acceso completo al sistema
-                      </span>
-                    </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="space-y-1">
                       <div className="font-medium text-purple-700">👨‍⚕️ Psicólogos:</div>
-                      <div className="space-y-1 text-slate-600">
+                      <div className="space-y-0.5 text-slate-600">
                         <div>ana.garcia@mentesana.com</div>
                         <div>carlos.ruiz@mentesana.com</div>
-                        <div>maria.lopez@mentesana.com</div>
-                        <div>david.martinez@mentesana.com</div>
                       </div>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                       <div className="font-medium text-pink-700">👤 Pacientes:</div>
-                      <div className="space-y-1 text-slate-600">
+                      <div className="space-y-0.5 text-slate-600">
                         <div>juan.perez@email.com</div>
                         <div>laura.gonzalez@email.com</div>
-                        <div>miguel.rodriguez@email.com</div>
-                        <div>sofia.martinez@email.com</div>
                       </div>
                     </div>
                   </div>
-                  <div className="text-center mt-3">
-                    <span className="text-xs text-slate-500">Contraseña para psicólogos y pacientes: <code className="bg-slate-200 px-1 rounded">123456</code></span>
+                  <div className="text-center mt-2">
+                    <span className="text-xs text-slate-500">Contraseña: <code className="bg-slate-200 px-1 rounded">123456</code></span>
                   </div>
                 </div>
 
                 {/* Register Link */}
-                <div className="mt-8 text-center">
-                  <p className="text-slate-600">
+                <div className="mt-4 text-center">
+                  <p className="text-slate-600 text-sm">
                     ¿No tienes cuenta?{" "}
                     <Link href="/auth/register" className="text-purple-600 hover:text-purple-700 font-medium">
                       Regístrate gratis
