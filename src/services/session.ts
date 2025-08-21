@@ -397,7 +397,7 @@ export class SessionService {
 
   private generateAlerts(
     session: TherapySession, 
-    riskAssessment?: any
+    riskAssessment?: ConversationContext['riskAssessment']
   ): string[] {
     const alerts: string[] = []
 

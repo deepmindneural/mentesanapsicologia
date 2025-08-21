@@ -1,7 +1,10 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { useAuth } from '@/contexts/AuthContext'
+import AIPersonalityWizard from '@/components/admin/AIPersonalityWizard'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -10,8 +13,6 @@ import {
   Plus, 
   Edit, 
   Trash2, 
-  Eye,
-  MoreVertical,
   Users,
   MessageCircle,
   TrendingUp,
@@ -30,13 +31,49 @@ export default function PersonalitiesAdminPage() {
   const [analytics, setAnalytics] = useState<{
     totalSessions: number;
     userSatisfactionAverage: number;
-    riskDistribution?: { high: number };
+    riskDistribution?: Record<string, number>;
   } | null>(null)
   const [loading, setLoading] = useState(true)
+  const [newPersonality, setNewPersonality] = useState<Partial<PsychologistPersonality>>({
+    name: '',
+    specialization: '',
+    experience: 1,
+    bio: '',
+    credentials: [],
+    languages: ['Español'],
+    communicationStyle: {
+      formality: 'mixed',
+      empathy: 8,
+      directness: 7,
+      warmth: 8,
+      analyticalLevel: 7
+    },
+    therapyApproaches: [],
+    avatar: '',
+    isActive: true,
+    rating: 0,
+    totalSessions: 0
+  })
+  const { user } = useAuth()
+  const router = useRouter()
+
+  // Check admin authentication
+  useEffect(() => {
+    if (!user) {
+      router.replace('/auth/login')
+      return
+    }
+    if (user.role !== 'ADMIN') {
+      router.replace('/dashboard')
+      return
+    }
+  }, [user, router])
 
   useEffect(() => {
-    loadData()
-  }, [])
+    if (user?.role === 'ADMIN') {
+      loadData()
+    }
+  }, [user])
 
   const loadData = async () => {
     try {
@@ -82,14 +119,85 @@ export default function PersonalitiesAdminPage() {
     }
   }
 
-  if (loading) {
+  const handleCreatePersonality = async () => {
+    if (!newPersonality.name || !newPersonality.specialization || !newPersonality.bio) {
+      alert('Por favor completa todos los campos obligatorios')
+      return
+    }
+
+    const personalityToCreate: PsychologistPersonality = {
+      id: `personality_${Date.now()}`,
+      name: newPersonality.name || '',
+      avatar: newPersonality.avatar || `https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=300&q=80`,
+      specialization: newPersonality.specialization || '',
+      experience: newPersonality.experience || 1,
+      bio: newPersonality.bio || '',
+      credentials: newPersonality.credentials || [],
+      languages: newPersonality.languages || ['Español'],
+      communicationStyle: newPersonality.communicationStyle || {
+        formality: 'mixed',
+        empathy: 8,
+        directness: 7,
+        warmth: 8,
+        analyticalLevel: 7
+      },
+      therapyApproaches: newPersonality.therapyApproaches || [],
+      systemPrompt: '',
+      isActive: newPersonality.isActive ?? true,
+      rating: 0,
+      totalSessions: 0,
+      lastUpdated: new Date()
+    }
+
+    // Generate system prompt
+    personalityToCreate.systemPrompt = await personalityService.generatePersonalityPrompt(personalityToCreate)
+    
+    // Add to service
+    personalityService.addPersonality(personalityToCreate)
+    
+    // Update local state
+    setPersonalities(prev => [...prev, personalityToCreate])
+    
+    // Reset form
+    setNewPersonality({
+      name: '',
+      specialization: '',
+      experience: 1,
+      bio: '',
+      credentials: [],
+      languages: ['Español'],
+      communicationStyle: {
+        formality: 'mixed',
+        empathy: 8,
+        directness: 7,
+        warmth: 8,
+        analyticalLevel: 7
+      },
+      therapyApproaches: [],
+      avatar: '',
+      isActive: true,
+      rating: 0,
+      totalSessions: 0
+    })
+    
+    setShowCreateForm(false)
+  }
+
+  if (!user || user.role !== 'ADMIN' || loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full"
-        />
+        <div className="text-center">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"
+          />
+          <p className="text-slate-600">
+            {!user ? 'Verificando autenticación...' : 
+             user.role !== 'ADMIN' ? 'Acceso denegado...' : 
+             'Cargando...'}
+          </p>
+        </div>
       </div>
     )
   }
@@ -99,21 +207,30 @@ export default function PersonalitiesAdminPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">
-              Gestión de{" "}
-              <span style={{
-                background: 'linear-gradient(to right, #9333ea, #ec4899)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }}>
-                Personalidades IA
-              </span>
-            </h1>
-            <p className="text-slate-600 mt-2">
-              Administra las personalidades de psicólogos virtuales
-            </p>
+          <div className="flex items-center gap-4">
+            <Button 
+              onClick={() => router.push('/admin')}
+              variant="outline"
+              className="border-purple-300 text-purple-700 hover:bg-purple-50"
+            >
+              ← Volver al Dashboard
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900">
+                Gestión de{" "}
+                <span style={{
+                  background: 'linear-gradient(to right, #9333ea, #ec4899)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}>
+                  Personalidades IA
+                </span>
+              </h1>
+              <p className="text-slate-600 mt-2">
+                Administra las personalidades de psicólogos virtuales
+              </p>
+            </div>
           </div>
           
           <Button 
@@ -172,7 +289,7 @@ export default function PersonalitiesAdminPage() {
                   <div>
                     <p className="text-sm text-slate-600">Riesgo Alto</p>
                     <p className="text-2xl font-bold text-slate-900">
-                      {analytics.riskDistribution?.high || 0}
+                      {analytics.riskDistribution?.['high'] || 0}
                     </p>
                   </div>
                   <AlertTriangle className="h-8 w-8 text-red-600" />
@@ -358,7 +475,7 @@ export default function PersonalitiesAdminPage() {
                       ...editingPersonality,
                       name: e.target.value
                     })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   />
                 </div>
                 
@@ -373,7 +490,7 @@ export default function PersonalitiesAdminPage() {
                       ...editingPersonality,
                       specialization: e.target.value
                     })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   />
                 </div>
                 
@@ -394,7 +511,7 @@ export default function PersonalitiesAdminPage() {
                           empathy: parseInt(e.target.value)
                         }
                       })}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                     />
                   </div>
                   
@@ -414,7 +531,7 @@ export default function PersonalitiesAdminPage() {
                           directness: parseInt(e.target.value)
                         }
                       })}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                     />
                   </div>
                 </div>
@@ -435,6 +552,41 @@ export default function PersonalitiesAdminPage() {
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {/* Professional AI Personality Wizard */}
+      {showCreateForm && (
+        <AIPersonalityWizard
+          onClose={() => setShowCreateForm(false)}
+          onSave={(data) => {
+            // Convert wizard data to our personality format
+            const personalityToCreate = {
+              id: `personality_${Date.now()}`,
+              name: data.name,
+              avatar: data.avatar || `https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=300&q=80`,
+              specialization: data.specialization,
+              experience: data.experience,
+              bio: data.bio,
+              credentials: data.credentials,
+              languages: data.languages,
+              communicationStyle: data.communicationStyle,
+              therapyApproaches: data.therapeuticApproach,
+              systemPrompt: '',
+              isActive: true,
+              rating: 0,
+              totalSessions: 0,
+              lastUpdated: new Date()
+            }
+
+            // Add to service
+            personalityService.addPersonality(personalityToCreate)
+            
+            // Update local state
+            setPersonalities(prev => [...prev, personalityToCreate])
+            
+            setShowCreateForm(false)
+          }}
+        />
       )}
     </div>
   )

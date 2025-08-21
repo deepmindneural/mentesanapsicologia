@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/AuthContext"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -40,6 +42,33 @@ import {
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState("overview")
+  const { user } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (user) {
+      // Redirect based on user role
+      if (user.role === 'ADMIN') {
+        router.replace('/admin')
+      } else if (user.role === 'PSYCHOLOGIST') {
+        router.replace('/dashboard/psicologo')
+      } else if (user.role === 'CLIENT') {
+        router.replace('/dashboard/paciente')
+      }
+    }
+  }, [user, router])
+
+  // Show loading while redirecting
+  if (user && user.role !== 'CLIENT') {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600">Redirigiendo...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden">

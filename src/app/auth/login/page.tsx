@@ -31,9 +31,16 @@ export default function LoginPage() {
       if (success) {
         // Redirect based on user role
         const user = JSON.parse(localStorage.getItem('mentesana_user') || '{}')
-        if (user.role === 'PSYCHOLOGIST') {
+        console.log('Login successful, user role:', user.role)
+        
+        if (user.role === 'ADMIN') {
+          console.log('Redirecting admin user to /admin')
+          router.push('/admin')
+        } else if (user.role === 'PSYCHOLOGIST') {
+          console.log('Redirecting psychologist to /dashboard/psicologo')
           router.push('/dashboard/psicologo')
         } else {
+          console.log('Redirecting patient to /dashboard/paciente')
           router.push('/dashboard/paciente')
         }
       } else {
@@ -268,6 +275,27 @@ export default function LoginPage() {
                 {/* Test Credentials */}
                 <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
                   <h4 className="font-semibold text-slate-800 mb-3 text-center">🧪 Credenciales de Prueba</h4>
+                  
+                  {/* Admin Credentials - Highlighted */}
+                  <div className="mb-4 p-3 bg-gradient-to-r from-orange-100 to-red-100 rounded-lg border border-orange-200">
+                    <div className="flex items-center justify-center mb-2">
+                      <span className="font-bold text-orange-800">🔐 ADMINISTRADOR</span>
+                    </div>
+                    <div className="text-center space-y-1 text-sm">
+                      <div className="font-mono bg-white px-2 py-1 rounded border">
+                        admin@admin.com
+                      </div>
+                      <div className="font-mono bg-white px-2 py-1 rounded border">
+                        admin
+                      </div>
+                    </div>
+                    <div className="text-center mt-2">
+                      <span className="text-xs text-orange-700 font-medium">
+                        ⚡ Acceso completo al sistema
+                      </span>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div className="space-y-2">
                       <div className="font-medium text-purple-700">👨‍⚕️ Psicólogos:</div>
@@ -289,7 +317,7 @@ export default function LoginPage() {
                     </div>
                   </div>
                   <div className="text-center mt-3">
-                    <span className="text-xs text-slate-500">Contraseña para todos: <code className="bg-slate-200 px-1 rounded">123456</code></span>
+                    <span className="text-xs text-slate-500">Contraseña para psicólogos y pacientes: <code className="bg-slate-200 px-1 rounded">123456</code></span>
                   </div>
                 </div>
 

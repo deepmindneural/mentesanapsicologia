@@ -18,7 +18,7 @@ interface SpeechRecognitionInterface {
   continuous: boolean;
   interimResults: boolean;
   onresult: ((event: any) => void) | null;
-  onerror: ((event: any) => void) | null;
+  onerror: ((event: Event) => void) | null;
   start(): void;
   stop(): void;
 }
@@ -112,7 +112,7 @@ export class VoiceService {
         resolve(transcript)
       }
 
-      this.recognition.onerror = (event: any) => {
+      this.recognition.onerror = (event: Event) => {
         reject(new Error(`Speech recognition error: ${event.error}`))
       }
 

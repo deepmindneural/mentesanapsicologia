@@ -58,8 +58,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
+    console.log('Logout called - clearing user session')
     setUser(null);
     localStorage.removeItem('mentesana_user');
+    // Clear any other potential storage items
+    localStorage.removeItem('mentesana_token');
+    localStorage.removeItem('mentesana_refresh_token');
   };
 
   const value: AuthContextType = {

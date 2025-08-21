@@ -12,6 +12,7 @@ import {
   SmartChatIcon, 
   AIAvatarIcon 
 } from "@/components/ui/custom-icons";
+import SimpleAvatar3D from "@/components/interactive/SimpleAvatar3D";
 import { 
   ArrowRight, 
   MessageSquare, 
@@ -45,6 +46,8 @@ export default function Home() {
   const [chatbotOpen, setChatbotOpen] = useState(false);
   const [chatbotMinimized, setChatbotMinimized] = useState(false);
   const [message, setMessage] = useState("");
+  const [avatarTalking, setAvatarTalking] = useState(false);
+  const [avatarEmotion, setAvatarEmotion] = useState<'neutral' | 'happy' | 'concerned' | 'thoughtful'>('neutral');
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -68,6 +71,8 @@ export default function Home() {
     setMessage("");
     
     setTimeout(() => {
+      setAvatarTalking(true);
+      setAvatarEmotion('happy');
       const botResponse = {
         id: messages.length + 2,
         text: "Gracias por tu mensaje. Un psicólogo especializado te contactará pronto. Mientras tanto, ¿te gustaría acceder a nuestro chat con IA?",
@@ -75,6 +80,12 @@ export default function Home() {
         timestamp: new Date()
       };
       setMessages(prev => [...prev, botResponse]);
+      
+      // Stop talking after 3 seconds and return to neutral
+      setTimeout(() => {
+        setAvatarTalking(false);
+        setAvatarEmotion('neutral');
+      }, 3000);
     }, 1000);
   };
 
@@ -1178,7 +1189,7 @@ export default function Home() {
                     
                     {/* Testimonial text */}
                     <blockquote className="text-slate-700 text-center mb-6 italic leading-relaxed">
-                      "{testimonial.testimonial}"
+                      &ldquo;{testimonial.testimonial}&rdquo;
                     </blockquote>
                     
                     {/* User info */}
@@ -1347,8 +1358,78 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Full Body Psychologist Avatar */}
+      <div className="fixed bottom-6 left-6 z-40">
+        <motion.div
+          initial={{ opacity: 0, scale: 0, x: -100 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          transition={{ delay: 1, type: "spring", stiffness: 100 }}
+          className="relative cursor-pointer"
+          onClick={() => setChatbotOpen(!chatbotOpen)}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <div className="relative">
+            <SimpleAvatar3D 
+              talking={avatarTalking}
+              emotion={avatarEmotion}
+              className="w-48 h-64 lg:w-56 lg:h-72"
+            />
+            
+            {/* Hover ring effect */}
+            <motion.div
+              animate={{ 
+                scale: [1, 1.05, 1],
+                opacity: [0.3, 0.6, 0.3]
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute inset-0 border-2 border-blue-400/30 rounded-xl pointer-events-none"
+            />
+            
+            {/* Speaking indicator */}
+            {avatarTalking && (
+              <motion.div
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ repeat: Infinity, duration: 0.8 }}
+                className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full border-2 border-white flex items-center justify-center"
+              >
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+              </motion.div>
+            )}
+            
+            {/* Chat connection line */}
+            {chatbotOpen && (
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: "calc(100vw - 400px)" }}
+                transition={{ duration: 0.5 }}
+                className="absolute top-1/2 right-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 opacity-50"
+              />
+            )}
+          </div>
+          
+          {/* Interactive tooltip */}
+          {!chatbotOpen && (
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 3, duration: 0.5 }}
+              className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-white rounded-lg p-3 shadow-lg border border-blue-100 min-w-[200px]"
+            >
+              <div className="text-sm text-slate-700 font-medium text-center">
+                👋 ¡Hola! Soy el Dr. IA
+              </div>
+              <div className="text-xs text-blue-600 mt-1 text-center">
+                Haz click aquí para hablar conmigo
+              </div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-2 w-3 h-3 bg-white border-b border-r border-blue-100 rotate-45"></div>
+            </motion.div>
+          )}
+        </motion.div>
+      </div>
+
       {/* Floating Chatbot */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
         {/* Chatbot Window */}
         {chatbotOpen && (
           <motion.div
@@ -1440,6 +1521,7 @@ export default function Home() {
             )}
           </motion.div>
         )}
+
 
         {/* Chatbot Toggle Button */}
         <motion.button

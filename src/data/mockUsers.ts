@@ -2,7 +2,7 @@ export interface MockUser {
   id: string;
   email: string;
   password: string;
-  role: 'PSYCHOLOGIST' | 'CLIENT';
+  role: 'PSYCHOLOGIST' | 'CLIENT' | 'ADMIN';
   profile: {
     firstName: string;
     lastName: string;
@@ -137,15 +137,60 @@ export const mockUsers: MockUser[] = [
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=300&q=80"
     }
   },
+  // Administradores
   {
-    id: "client_5",
+    id: "admin_1",
     email: "admin@mentesana.com",
     password: "admin123",
-    role: "CLIENT",
+    role: "ADMIN",
     profile: {
       firstName: "Administrador",
       lastName: "Sistema",
       avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&q=80"
+    }
+  },
+  {
+    id: "admin_2",
+    email: "admin@admin.com",
+    password: "admin",
+    role: "ADMIN",
+    profile: {
+      firstName: "Admin",
+      lastName: "Rápido",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80"
+    }
+  },
+  {
+    id: "admin_3",
+    email: "superadmin@mentesana.com",
+    password: "super123",
+    role: "ADMIN",
+    profile: {
+      firstName: "Super",
+      lastName: "Administrador",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80"
+    }
+  },
+  {
+    id: "admin_4",
+    email: "root@mentesana.com",
+    password: "root",
+    role: "ADMIN",
+    profile: {
+      firstName: "Root",
+      lastName: "Master",
+      avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671d66?auto=format&fit=crop&w=300&q=80"
+    }
+  },
+  {
+    id: "admin_5",
+    email: "test@admin.com",
+    password: "test",
+    role: "ADMIN",
+    profile: {
+      firstName: "Usuario",
+      lastName: "Prueba",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b550?auto=format&fit=crop&w=300&q=80"
     }
   }
 ];
@@ -165,4 +210,8 @@ export const getPsychologists = (): MockUser[] => {
 
 export const getClients = (): MockUser[] => {
   return mockUsers.filter(u => u.role === 'CLIENT');
+};
+
+export const getAdmins = (): MockUser[] => {
+  return mockUsers.filter(u => u.role === 'ADMIN');
 };

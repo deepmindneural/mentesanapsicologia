@@ -216,7 +216,7 @@ export default function DemoPage() {
             </div>
             
             <div className="space-y-4">
-              {step.content.data.questions.map((question, index) => (
+              {step.content.data.questions?.map((question, index) => (
                 <div key={index} className="border border-slate-200 rounded-xl p-4">
                   <p className="font-medium text-slate-700 mb-3">{question}</p>
                   <div className="space-y-2">
@@ -250,7 +250,7 @@ export default function DemoPage() {
             </div>
             
             <div className="grid gap-4">
-              {step.content.data.recommended.map((psychologist, index) => (
+              {step.content.data.recommended?.map((psychologist, index) => (
                 <motion.div 
                   key={index}
                   className="border-2 border-purple-200 rounded-xl p-4 hover:border-purple-400 transition-colors cursor-pointer"
@@ -330,7 +330,7 @@ export default function DemoPage() {
                 <div className="mt-4">
                   <h4 className="font-semibold text-slate-700 mb-3">Horarios disponibles</h4>
                   <div className="grid grid-cols-2 gap-2">
-                    {step.content.data.availableSlots.map((slot, index) => (
+                    {step.content.data.availableSlots?.map((slot, index) => (
                       <button 
                         key={index}
                         className={`p-3 rounded-lg border transition-colors ${
@@ -350,7 +350,7 @@ export default function DemoPage() {
               <div>
                 <h4 className="font-semibold text-slate-700 mb-4">Modalidad de sesión</h4>
                 <div className="space-y-3">
-                  {step.content.data.modalities.map((modality, index) => (
+                  {step.content.data.modalities?.map((modality, index) => (
                     <div 
                       key={index}
                       className={`border-2 rounded-xl p-4 cursor-pointer transition-colors ${
@@ -421,7 +421,7 @@ export default function DemoPage() {
                       transition={{ delay: 1 }}
                     >
                       <p className="text-sm">
-                        "Hola, soy la Dra. Ana. Es un placer conocerte. ¿Cómo te sientes hoy y qué te gustaría trabajar en nuestra sesión?"
+                        &ldquo;Hola, soy la Dra. Ana. Es un placer conocerte. ¿Cómo te sientes hoy y qué te gustaría trabajar en nuestra sesión?&rdquo;
                       </p>
                     </motion.div>
                     
@@ -432,7 +432,7 @@ export default function DemoPage() {
                       transition={{ delay: 2 }}
                     >
                       <p className="text-sm">
-                        "Hola doctora. He estado sintiendo mucha ansiedad últimamente, especialmente en el trabajo..."
+                        &ldquo;Hola doctora. He estado sintiendo mucha ansiedad últimamente, especialmente en el trabajo...&rdquo;
                       </p>
                     </motion.div>
                   </div>
@@ -457,7 +457,7 @@ export default function DemoPage() {
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
                   <h4 className="font-semibold mb-3">Características IA</h4>
                   <div className="space-y-2">
-                    {step.content.data.features.map((feature, index) => (
+                    {step.content.data.features?.map((feature, index) => (
                       <div key={index} className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-green-400" />
                         <span className="text-sm text-purple-100">{feature}</span>
@@ -530,7 +530,7 @@ export default function DemoPage() {
                 
                 <div className="space-y-4">
                   <h4 className="font-semibold text-slate-800">Objetivos Trabajados</h4>
-                  {step.content.data.goals.map((goal, index) => (
+                  {step.content.data.goals?.map((goal, index) => (
                     <motion.div 
                       key={index}
                       className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg"

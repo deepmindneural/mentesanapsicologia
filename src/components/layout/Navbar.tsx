@@ -2,10 +2,12 @@
 
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MenteSanaLogo } from "@/components/ui/custom-icons";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, LogOut, User } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface NavbarProps {
   showBackButton?: boolean;
@@ -18,6 +20,31 @@ export default function Navbar({
   backButtonText = "Volver al Inicio",
   backButtonHref = "/"
 }: NavbarProps) {
+  const { user, logout, isAuthenticated } = useAuth()
+  const router = useRouter()
+
+  const handleLogout = () => {
+    console.log('Navbar logout triggered')
+    logout()
+    // Small delay to ensure logout completes
+    setTimeout(() => {
+      router.push('/auth/login')
+    }, 100)
+  }
+
+  const getDashboardLink = () => {
+    if (!user) return '/auth/login'
+    switch (user.role) {
+      case 'ADMIN':
+        return '/admin'
+      case 'PSYCHOLOGIST':
+        return '/dashboard/psicologo'
+      case 'CLIENT':
+        return '/dashboard/paciente'
+      default:
+        return '/auth/login'
+    }
+  }
   return (
     <motion.header 
       className="glass-effect border-b sticky top-0 z-50"
@@ -69,7 +96,7 @@ export default function Navbar({
             </Link>
           </div>
           
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
             {showBackButton && (
               <Link href={backButtonHref}>
                 <Button variant="ghost" className="transition-all duration-200 hover:scale-105">
@@ -77,22 +104,56 @@ export default function Navbar({
                 </Button>
               </Link>
             )}
-            <Link href="/auth/login">
-              <Button variant="ghost" className="transition-all duration-200 hover:scale-105">
-                Iniciar Sesión
-              </Button>
-            </Link>
-            <Link href="/auth/register">
-              <Button 
-                className="transition-all duration-200 hover:shadow-lg text-white"
-                style={{
-                  background: 'linear-gradient(to right, #9333ea, #ec4899)',
-                }}
-              >
-                Comenzar Gratis
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+            
+            {isAuthenticated && user ? (
+              <>
+                {/* User Info */}
+                <div className="hidden md:flex items-center gap-2 text-sm text-slate-600">
+                  <User className="h-4 w-4" />
+                  <span>
+                    {user.profile?.firstName || user.email}
+                    {user.role === 'ADMIN' && ' (Admin)'}
+                    {user.role === 'PSYCHOLOGIST' && ' (Psicólogo)'}
+                  </span>
+                </div>
+                
+                {/* Dashboard Link */}
+                <Link href={getDashboardLink()}>
+                  <Button variant="ghost" className="transition-all duration-200 hover:scale-105">
+                    Mi Dashboard
+                  </Button>
+                </Link>
+                
+                {/* Logout Button */}
+                <Button 
+                  onClick={handleLogout}
+                  variant="outline" 
+                  className="transition-all duration-200 hover:scale-105 text-red-600 border-red-300 hover:bg-red-50"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Salir
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/login">
+                  <Button variant="ghost" className="transition-all duration-200 hover:scale-105">
+                    Iniciar Sesión
+                  </Button>
+                </Link>
+                <Link href="/auth/register">
+                  <Button 
+                    className="transition-all duration-200 hover:shadow-lg text-white"
+                    style={{
+                      background: 'linear-gradient(to right, #9333ea, #ec4899)',
+                    }}
+                  >
+                    Comenzar Gratis
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       </div>
