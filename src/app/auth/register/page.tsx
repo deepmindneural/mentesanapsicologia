@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { MenteSanaLogo } from "@/components/ui/custom-icons"
 import { Eye, EyeOff, User, UserCog, Shield, Heart, CheckCircle, Sparkles } from "lucide-react"
+import Navbar from "@/components/layout/Navbar"
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -27,8 +28,10 @@ export default function RegisterPage() {
   }
 
   return (
-    <div 
-      className="min-h-screen relative overflow-hidden"
+    <>
+      <Navbar />
+      <div 
+        className="min-h-screen relative overflow-hidden"
       style={{
         background: `
           radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
@@ -356,7 +359,7 @@ export default function RegisterPage() {
           </Card>
         </motion.div>
       </div>
-    </div>
-    </div>
+      </div>
+    </>
   )
 }

@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { MenteSanaLogo } from "@/components/ui/custom-icons"
 import { ArrowRight, Eye, EyeOff, Mail, Lock, Chrome, Smartphone, AlertCircle } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
+import Navbar from "@/components/layout/Navbar"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -54,7 +55,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <>
+      <Navbar />
+      <div className="min-h-screen relative overflow-hidden">
       {/* Advanced background with purple theme */}
       <div 
         className="absolute inset-0"
@@ -335,6 +338,7 @@ export default function LoginPage() {
           </motion.div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
