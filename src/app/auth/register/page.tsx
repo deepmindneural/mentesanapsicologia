@@ -32,14 +32,14 @@ export default function RegisterPage() {
       <Navbar />
       <div 
         className="min-h-screen relative overflow-hidden"
-      style={{
-        background: `
-          radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
-          radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
-          linear-gradient(135deg, #f8fafc 0%, #fdf2f8 100%)
-        `
-      }}
-    >
+        style={{
+          background: `
+            radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+            linear-gradient(135deg, #f8fafc 0%, #fdf2f8 100%)
+          `
+        }}
+      >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-xl animate-pulse"></div>
@@ -358,6 +358,7 @@ export default function RegisterPage() {
             </CardContent>
           </Card>
         </motion.div>
+        </div>
       </div>
       </div>
     </>
