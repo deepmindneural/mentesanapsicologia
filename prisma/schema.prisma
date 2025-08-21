@@ -1,0 +1,204 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  password    String
+  role        Role     @default(CLIENT)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  sessions    Session[]
+  testResults TestResult[]
+  appointments Appointment[]
+  chatMessages ChatMessage[]
+  subscription Subscription?
+  
+  // Solo para psicólogos
+  psychologistProfile PsychologistProfile?
+  
+  @@map("users")
+}
+
+model PsychologistProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  specialization  String
+  experience      Int
+  bio             String?
+  voiceId         String?  // ID único de voz para síntesis
+  personality     String?  // JSON con características de personalidad
+  accentData      String?  // Datos del acento y forma de hablar
+  isAvailable     Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments    Appointment[]
+  aiPersonality   AiPersonality?
+  
+  @@map("psychologist_profiles")
+}
+
+model AiPersonality {
+  id                String   @id @default(cuid())
+  psychologistId    String   @unique
+  modelData         String   // JSON con datos del modelo entrenado
+  voiceClone        String?  // Datos del clon de voz
+  conversationStyle String   // Estilo de conversación
+  responses         String   // Patrones de respuesta
+  isActive          Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  psychologist      PsychologistProfile @relation(fields: [psychologistId], references: [id], onDelete: Cascade)
+  
+  @@map("ai_personalities")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("sessions")
+}
+
+model Subscription {
+  id          String           @id @default(cuid())
+  userId      String           @unique
+  plan        SubscriptionPlan
+  status      SubscriptionStatus @default(ACTIVE)
+  startDate   DateTime         @default(now())
+  endDate     DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("subscriptions")
+}
+
+model Test {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  questions   String   // JSON con preguntas
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  results     TestResult[]
+  
+  @@map("tests")
+}
+
+model TestResult {
+  id        String   @id @default(cuid())
+  userId    String
+  testId    String
+  answers   String   // JSON con respuestas
+  score     Float?
+  result    String?  // Resultado del test
+  createdAt DateTime @default(now())
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test      Test @relation(fields: [testId], references: [id], onDelete: Cascade)
+  
+  @@map("test_results")
+}
+
+model Appointment {
+  id              String            @id @default(cuid())
+  userId          String
+  psychologistId  String
+  scheduledAt     DateTime
+  duration        Int               @default(60) // minutos
+  status          AppointmentStatus @default(SCHEDULED)
+  notes           String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  psychologist    PsychologistProfile @relation(fields: [psychologistId], references: [id], onDelete: Cascade)
+  
+  @@map("appointments")
+}
+
+model ChatMessage {
+  id           String      @id @default(cuid())
+  userId       String
+  content      String
+  isFromAi     Boolean     @default(false)
+  aiPersonality String?    // ID de la personalidad AI usada
+  messageType  MessageType @default(TEXT)
+  audioUrl     String?     // Para mensajes de voz
+  createdAt    DateTime    @default(now())
+
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("chat_messages")
+}
+
+model Avatar {
+  id          String   @id @default(cuid())
+  name        String
+  appearance  String   // JSON con configuración de apariencia
+  personality String   // JSON con configuración de personalidad
+  isDefault   Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("avatars")
+}
+
+enum Role {
+  CLIENT
+  PSYCHOLOGIST
+  ADMIN
+}
+
+enum SubscriptionPlan {
+  BASIC
+  PREMIUM
+  PROFESSIONAL
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
+  EXPIRED
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum MessageType {
+  TEXT
+  VOICE
+  IMAGE
+}
