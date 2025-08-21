@@ -1,0 +1,3 @@
+[variables]
+DISABLE_LIGHTNINGCSS = "true"
+NODE_ENV = "production"

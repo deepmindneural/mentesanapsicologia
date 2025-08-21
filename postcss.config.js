@@ -1,8 +1,8 @@
 module.exports = {
   plugins: {
     '@tailwindcss/postcss': {
-      // Disable Lightning CSS in production/Docker
-      lightningcss: false,
+      // Disable LightningCSS in Docker/production
+      lightningcss: process.env.DISABLE_LIGHTNINGCSS !== 'true',
     },
     autoprefixer: {},
   },
